@@ -16,6 +16,8 @@ return [
     |
     */
 
+    'dashboard_url' => env('DASHBOARD_URL'),
+    'app_url' => env('APP_URL'),
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

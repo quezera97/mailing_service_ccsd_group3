@@ -17,3 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/config', function() {
+    return response()->json([
+        'app_url' => env('APP_URL'),
+    ]);
+});
+
+Route::get('/health', function () {
+    // You can perform additional checks here (like database connection, cache status, etc.)
+    return response()->json(['status' => 'OK'], 200);
+});
+

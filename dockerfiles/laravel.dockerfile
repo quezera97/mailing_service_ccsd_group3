@@ -19,8 +19,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 
 WORKDIR /app
 
-COPY composer.json composer.lock ./
 COPY . .
-COPY .env .env
 
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs

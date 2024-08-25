@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SendMailController;
+use App\Http\Controllers\HealthCheckController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +17,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SendMailController::class, 'index']);
 Route::post('/send-email', [SendMailController::class, 'sendEmail'])->name('send.email');
+
+
+// routes/web.php
+
+Route::get('/live', function () {
+    // Perform basic checks, such as checking if the app is running
+    return response()->json(['status' => 'OK'], 200);
+});
 

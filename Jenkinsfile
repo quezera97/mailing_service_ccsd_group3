@@ -1,8 +1,14 @@
 pipeline {
     agent any
     environment {
+        APP_ENV = 'local'
+        DB_CONNECTION = 'mysql'
+        DB_PORT = '3306'
         DB_PASSWORD = credentials('DB_PASSWORD')
         DB_USERNAME = credentials('DB_USERNAME')
+        DB_DATABASE = 'laravel'
+        MAIL_MAILER = 'smtp'
+        MAIL_FROM_NAME = 'Laravel'
         MAIL_ENCRYPTION = credentials('MAIL_ENCRYPTION')
         MAIL_FROM_ADDRESS = credentials('MAIL_FROM_ADDRESS')
         MAIL_HOST = credentials('MAIL_HOST')

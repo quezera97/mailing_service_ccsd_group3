@@ -17,6 +17,7 @@ variables:
   MAIL_FROM_NAME: 'Mailing_Service'
 
 stages:
+  - build
   - test
 
 before_script:
@@ -40,27 +41,30 @@ before_script:
   - apt-get install -y google-chrome-stable
   - google-chrome --version # Verify Chrome installation
 
+build:
+  stage: build
+  script:
+    # Build and start services with Docker Compose
+    - docker compose up -d --build
+    # Wait for services to start up before running tests
+    - sleep 60
+
 test:
   stage: test
-  image: node:lts
+  image: selenium/node-chrome-debug:latest
   script:
-    - npm install
-    - docker compose up -d
-    - sleep 40
-    - docker compose ps
-    - docker compose logs app
-    # - npx mocha testcase/test_sendemail_javascript.spec.cjs
+    # Install Python dependencies inside the Docker container
+    - apt-get update
+    - apt-get install -y python3-venv python3-pip
+    # Set up Python virtual environment and activate it
+    - python3 -m venv myenv
+    - source myenv/bin/activate
+    - pip install selenium pytest
+    # Run Selenium tests using the virtual environment
+    - python3 test_sendemail.py
+
   after_script:
     - docker compose down
 
-  # In CI/CD Variables
-  # DB_USERNAME: 'group3'
-  # DB_PASSWORD: '87654321'
-  # MAIL_HOST: 'sandbox.smtp.mailtrap.io'
-  # MAIL_PORT: '2525'
-  # MAIL_USERNAME: '411b1cc4d89ccf'
-  # MAIL_PASSWORD: '3062cdc807ffc5'
-  # MAIL_ENCRYPTION: ''
-  # MAIL_FROM_ADDRESS: 'hello@example.com'
 
 

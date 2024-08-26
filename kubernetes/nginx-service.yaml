@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx-webserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-webserver
+  template:
+    metadata:
+      labels:
+        app: nginx-webserver
+    spec:
+      containers:
+      - name: nginx-container
+        image: danish3321/nginx-service:v1
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "500m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx-webserver
+  ports:
+  - name: nginx-service-port
+    protocol: TCP
+    port: 80
+    targetPort: 80

@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler-deployment
+  labels:
+    app: scheduler-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler-app
+  template:
+    metadata:
+      labels:
+        app: scheduler-app
+    spec:
+      containers:
+      - name: scheduler-container
+        image: quezera/mailing-service-scheduler:v1.0
+        env:
+        - name: DASHBOARD_URL
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: DASHBOARD_URL
+        - name: APP_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: APP_NAME
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: APP_ENV
+        - name: APP_DEBUG
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: APP_DEBUG
+        - name: APP_URL
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: APP_URL
+        - name: DB_CONNECTION
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: DB_CONNECTION
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: DB_PORT
+        - name: DB_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: DB_DATABASE
+        - name: DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-env
+              key: DB_PASSWORD
+        - name: MAIL_MAILER
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: MAIL_MAILER
+        - name: MAIL_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: MAIL_HOST
+        - name: MAIL_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: MAIL_PORT
+        - name: MAIL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: secret-env
+              key: MAIL_USERNAME
+        - name: MAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-env
+              key: MAIL_PASSWORD
+        - name: MAIL_ENCRYPTION
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: MAIL_ENCRYPTION
+        - name: MAIL_FROM_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: MAIL_FROM_ADDRESS
+        - name: MAIL_FROM_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: config-env
+              key: MAIL_FROM_NAME
+        command:
+          - sh
+          - -c
+          - |
+            php artisan schedule:work
+
+#---
+
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: scheduler-service
+#spec:
+#  type: LoadBalancer
+#  selector:
+#    app: scheduler-app
+#  ports:
+#  - name: scheduler-service-port
+#    protocol: TCP
+#    port: 8000
+#    targetPort: 8000
